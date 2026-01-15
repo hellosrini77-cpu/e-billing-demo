@@ -301,6 +301,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 md:p-6">
+      {/* Hidden file input - placed at top level for reliable access */}
+      <input 
+        ref={fileInputRef}
+        type="file" 
+        accept=".pdf"
+        onChange={handlePDFUpload}
+        style={{ position: 'absolute', left: '-9999px' }}
+      />
+      
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -444,7 +453,10 @@ export default function App() {
               {/* Input Tabs */}
               <div className="flex gap-2 mb-4">
                 <button
-                  onClick={() => setActiveTab('upload')}
+                  onClick={() => {
+                    setActiveTab('upload');
+                    setTimeout(() => fileInputRef.current?.click(), 100);
+                  }}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     activeTab === 'upload' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                   }`}
@@ -464,13 +476,6 @@ export default function App() {
               {/* Upload Tab */}
               {activeTab === 'upload' && !currentInvoice && (
                 <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 text-center">
-                  <input 
-                    ref={fileInputRef}
-                    type="file" 
-                    accept=".pdf"
-                    onChange={handlePDFUpload}
-                    style={{ position: 'absolute', left: '-9999px' }}
-                  />
                   <button 
                     type="button"
                     onClick={handleUploadClick}
