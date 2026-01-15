@@ -22,6 +22,14 @@ export default function App() {
   const [budgetInput, setBudgetInput] = useState('');
   const fileInputRef = useRef(null);
 
+  // Handle file input click
+  const handleUploadClick = () => {
+    console.log('Upload clicked, ref:', fileInputRef.current);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   // Load data from localStorage
   useEffect(() => {
     try {
@@ -68,6 +76,7 @@ export default function App() {
 
   // Parse PDF invoice
   const handlePDFUpload = async (e) => {
+    console.log('File input changed:', e.target.files);
     const file = e.target.files[0];
     if (!file || file.type !== 'application/pdf') {
       alert('Please upload a PDF file');
@@ -452,36 +461,37 @@ export default function App() {
                 </button>
               </div>
 
-             {/* Upload Tab */}
-{activeTab === 'upload' && !currentInvoice && (
-  <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 text-center">
-    <input 
-      ref={fileInputRef}
-      type="file" 
-      accept=".pdf" 
-      onChange={handlePDFUpload} 
-      style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }}
-    />
-    <div 
-      onClick={() => fileInputRef.current?.click()}
-      className="cursor-pointer flex flex-col items-center"
-    >
-      <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mb-3">
-        <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-        </svg>
-      </div>
-      {parsing ? (
-        <span className="text-blue-400">Parsing PDF...</span>
-      ) : (
-        <>
-          <span className="text-slate-300 font-medium">Click to upload PDF invoice</span>
-          <span className="text-slate-500 text-sm mt-1">Extracts vendor, date, and amount</span>
-        </>
-      )}
-    </div>
-  </div>
-)}
+              {/* Upload Tab */}
+              {activeTab === 'upload' && !currentInvoice && (
+                <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 text-center">
+                  <input 
+                    ref={fileInputRef}
+                    type="file" 
+                    accept=".pdf"
+                    onChange={handlePDFUpload}
+                    style={{ position: 'absolute', left: '-9999px' }}
+                  />
+                  <button 
+                    type="button"
+                    onClick={handleUploadClick}
+                    className="w-full flex flex-col items-center bg-transparent border-0 cursor-pointer"
+                  >
+                    <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </div>
+                    {parsing ? (
+                      <span className="text-blue-400">Parsing PDF...</span>
+                    ) : (
+                      <>
+                        <span className="text-slate-300 font-medium">Click to upload PDF invoice</span>
+                        <span className="text-slate-500 text-sm mt-1">Extracts vendor, date, and amount</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
 
               {/* Manual Entry Tab */}
               {activeTab === 'manual' && !currentInvoice && (
