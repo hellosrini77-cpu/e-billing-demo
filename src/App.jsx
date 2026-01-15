@@ -30,6 +30,25 @@ export default function App() {
     }
   };
 
+  // Sample demo data
+  const sampleData = {
+    accruals: [
+      { id: 1001, vendor: 'Wilson Sonsini LLP', description: 'Patent litigation - discovery phase', amount: 45000, createdDate: '2025-01-10T10:00:00Z' },
+      { id: 1002, vendor: 'Cooley LLP', description: 'Series B financing docs', amount: 28000, createdDate: '2025-01-12T14:00:00Z' },
+    ],
+    pendingInvoices: [
+      { id: 2001, vendor: 'Fenwick & West', date: '2025-01-08', amount: 32500, receivedDate: '2025-01-14T09:00:00Z', rawText: 'Demo invoice' },
+    ],
+    approvedInvoices: [
+      { id: 3001, vendor: 'Orrick LLP', date: '2025-01-05', amount: 18750, approvedDate: '2025-01-13T11:00:00Z', rawText: 'Demo invoice' },
+    ],
+    paidInvoices: [
+      { id: 4001, vendor: 'Latham & Watkins', date: '2024-12-15', amount: 67000, paidDate: '2025-01-02T10:00:00Z', rawText: 'Demo invoice' },
+      { id: 4002, vendor: 'Morrison Foerster', date: '2024-12-20', amount: 41500, paidDate: '2025-01-05T14:00:00Z', rawText: 'Demo invoice' },
+    ],
+    rejectedInvoices: []
+  };
+
   // Load data from localStorage
   useEffect(() => {
     try {
@@ -42,6 +61,13 @@ export default function App() {
         setApprovedInvoices(parsed.approvedInvoices || []);
         setPaidInvoices(parsed.paidInvoices || []);
         setRejectedInvoices(parsed.rejectedInvoices || []);
+      } else {
+        // Load sample data on first run
+        setAccruals(sampleData.accruals);
+        setPendingInvoices(sampleData.pendingInvoices);
+        setApprovedInvoices(sampleData.approvedInvoices);
+        setPaidInvoices(sampleData.paidInvoices);
+        setRejectedInvoices(sampleData.rejectedInvoices);
       }
     } catch (e) {
       console.log('No existing data, starting fresh');
