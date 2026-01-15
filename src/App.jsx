@@ -228,11 +228,20 @@ export default function App() {
     setAccrualEntry({ vendor: '', description: '', amount: '' });
   };
 
-  // Remove accrual (when invoice arrives)
-  const removeAccrual = (id) => {
-    const newAccruals = accruals.filter(a => a.id !== id);
+  // Remove accrual (when invoice arrives) - pre-fill invoice entry
+  const removeAccrual = (accrual) => {
+    const newAccruals = accruals.filter(a => a.id !== accrual.id);
     setAccruals(newAccruals);
     saveData({ accruals: newAccruals });
+    
+    // Pre-fill invoice entry and navigate to invoice processing
+    setManualEntry({
+      vendor: accrual.vendor,
+      date: new Date().toISOString().split('T')[0],
+      amount: accrual.amount.toString()
+    });
+    setActiveTab('manual');
+    setActiveSection('invoices');
   };
 
   // Add to pending (new invoice received)
@@ -705,9 +714,9 @@ export default function App() {
                         <div className="text-yellow-400 font-semibold">{formatCurrency(acc.amount)}</div>
                       </div>
                       <button
-                        onClick={() => removeAccrual(acc.id)}
+                        onClick={() => removeAccrual(acc)}
                         className="px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-sm"
-                        title="Remove when invoice received"
+                        title="Remove accrual and create invoice"
                       >
                         Invoice Received
                       </button>
