@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker
@@ -20,6 +20,7 @@ export default function App() {
   const [parsing, setParsing] = useState(false);
   const [editingBudget, setEditingBudget] = useState(false);
   const [budgetInput, setBudgetInput] = useState('');
+  const fileInputRef = useRef(null);
 
   // Load data from localStorage
   useEffect(() => {
@@ -454,8 +455,17 @@ export default function App() {
               {/* Upload Tab */}
               {activeTab === 'upload' && !currentInvoice && (
                 <div className="border-2 border-dashed border-slate-600 rounded-xl p-6 text-center">
-                  <input type="file" accept=".pdf" onChange={handlePDFUpload} className="hidden" id="pdf-upload" />
-                  <label htmlFor="pdf-upload" className="cursor-pointer flex flex-col items-center">
+                  <input 
+                    ref={fileInputRef}
+                    type="file" 
+                    accept=".pdf" 
+                    onChange={handlePDFUpload} 
+                    className="hidden" 
+                  />
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="cursor-pointer flex flex-col items-center"
+                  >
                     <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mb-3">
                       <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -469,7 +479,7 @@ export default function App() {
                         <span className="text-slate-500 text-sm mt-1">Extracts vendor, date, and amount</span>
                       </>
                     )}
-                  </label>
+                  </div>
                 </div>
               )}
 
